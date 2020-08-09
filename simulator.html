@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="simulator.css">
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script> -->
+  <title>Simulator</title>
+</head>
+
+<body>
+  <div id="title">
+    オイラー法、ルンゲクッタ法の比較シミュレータ
+  </div>
+  <div id="contents">
+    <div id="ui">
+      <div>
+        dy/dx = <input type="text" id="formula">
+        <p>・初期条件</p>
+        <p>x = <input type="text" id="xinit"></p>
+        <p>y = <input type="text" id="yinit"></p>
+        <p>・刻み幅</p>
+        <p>h = <input type="text" id="prot"></p>
+      </div>
+      <div>
+        <input type="radio" name="select" id="euler" checked>オイラー法
+        <input type="radio" name="select" id="runge">ルンゲクッタ法
+      </div>
+      <div>
+        <button type="button" id="start">計算</button>
+        <button type="button" id="clear">クリア</button>
+        <button type="button" id="overlay">オーバーレイ</button>
+      </div>
+    </div>
+    <div id="graph">
+      iiiii
+    </div>
+  </div>
+</body>
+
+</html>
