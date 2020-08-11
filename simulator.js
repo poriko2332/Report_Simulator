@@ -87,7 +87,7 @@ class Euler {
     this.xinit = parseFloat(input[1].value);
     this.yinit = parseFloat(input[2].value);
     this.prot = parseFloat(input[3].value);
-    this.max = 25.0;
+    this.max = 10.0;
     this.scale = scale;
     this.x_prot = document.querySelector("#x_prot");
     this.y_prot = document.querySelector("#y_prot");
