@@ -19,7 +19,7 @@ class Simulator_ui {
     this.euler = euler;
     this.runge = runge;
     this.canvas = canvas;
-    this.scale = 1.0;   //グラフの拡大率,500px基準
+    this.scale = 50.0;   //グラフの拡大率,500px基準
     
     this.clear.addEventListener("click", () => {
       console.log("clear");
@@ -31,13 +31,14 @@ class Simulator_ui {
     });
     this.euler.addEventListener("click", () => {
       var result = new Euler(canvas, input);
-      result.next();
+      result.next(this.scale);
     });
   }
 
   //座標軸と目盛りを描画
   draw_axis() {
     let ctx = this.canvas.getContext("2d");
+    ctx.strokeStyle = ("rgb(0, 0, 0)");
     ctx.beginPath();
     ctx.moveTo(0, this.canvas.height);
     ctx.lineTo(0, 0);
@@ -45,7 +46,23 @@ class Simulator_ui {
     ctx.lineTo(this.canvas.width, this.canvas.height);
     ctx.stroke();
 
+    //x軸の目盛り
+    for (let i = 0; i <= this.canvas.width; i += this.scale) {
+      ctx.beginPath();
+      ctx.lineWidth = 0.3;
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, this.canvas.height);
+      ctx.stroke();
+    }
 
+    //y軸の目盛り
+    for (let i = 0; i <= this.canvas.height; i += this.scale) {
+      ctx.beginPath();
+      ctx.lineWidth = 0.3;
+      ctx.moveTo(0, i);
+      ctx.lineTo(this.canvas.width, i);
+      ctx.stroke();
+    }
   }
 
   //グラフ描画を行うキャンバスの内容削除
@@ -70,15 +87,16 @@ class Euler {
     
   }
 
-  next() {
-    var scale = 10.0;
-    
+  next(scale) {
+    this.scale = scale;
     while (this.xinit <= this.max) {
-      this.yinit += this.prot * this.xinit ** 2;   //ここの1.0 * this.xinitを入力した式にしたい。
+      this.yinit += this.prot * this.xinit * 2;   //ここの1.0 * this.xinitを入力した式にしたい。
       this.xinit += this.prot;
       console.log("x = " + this.xinit);
       console.log("y = " + this.yinit);
 
+      this.ctx.lineWidth = 2.0;
+      this.ctx.strokeStyle = "rgb(220, 40, 40)";
       this.ctx.beginPath();
       this.ctx.moveTo(this.xinit * scale , this.canvas.height - this.yinit * scale);
       this.ctx.lineTo(this.xinit * scale + 1, this.canvas.height - this.yinit * scale + 1);
