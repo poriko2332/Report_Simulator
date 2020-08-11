@@ -5,14 +5,14 @@ window.addEventListener("load", () => {
     document.querySelector("#euler"),
     document.querySelector("#runge"),
     document.querySelector("#result"),
-    document.querySelectorAll("#scale_aj > button")
   );
 
+  sim.set_scale(document.querySelectorAll("#scale_aj > button"));
   sim.draw_axis();
 });
 
 class Simulator_ui {
-  constructor(input, clear, euler, runge, canvas, scale) {
+  constructor(input, clear, euler, runge, canvas) {
     this.input = input;
     this.clear = clear;
     this.euler = euler;
@@ -32,23 +32,15 @@ class Simulator_ui {
     this.runge.addEventListener("click", () => {
       let runge_result = new Runge(canvas, input, this.scale);
       runge_result.animate();
-    })
-    for (let btn of scale) {
-      btn.addEventListener("click", () => {
-        if (btn.getAttribute("number")) {
-          this.scale = btn.getAttribute("number");
-          this.clear_canvas();
-          this.draw_axis();
-          console.log(this.scale);
-        }
-      });
-    }
+    });
+    this.draw_axis(25.0);
   }
 
   //座標軸と目盛りを描画
-  draw_axis() {
+  draw_axis(scale) {
     let ctx = this.canvas.getContext("2d");
-    // ctx.strokeStyle = ("rgb(0, 0, 0)");
+    this.scale = scale;
+    ctx.strokeStyle = ("rgb(0, 0, 0)");
     // ctx.beginPath();
     // ctx.moveTo(0, this.canvas.height);
     // ctx.lineTo(0, 0);
@@ -80,6 +72,17 @@ class Simulator_ui {
   clear_canvas() {
     let ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  set_scale(btnarray) {
+    for (let btn of btnarray) {
+      btn.addEventListener("click", () => {
+        if (btn.getAttribute("number")) {
+          this.clear_canvas();
+          this.draw_axis(parseInt(btn.getAttribute("number")));
+        }
+      });
+    }
   }
 }
 
