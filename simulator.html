@@ -17,7 +17,7 @@
   <div id="contents">
     <div id="ui">
       <div id="text">
-        dy/dx = <input type="text" id="formula">
+        dy/dx = <input type="text" id="formula" disabled>
         <p>・初期条件</p>
         <p>x0 = <input type="text" id="xinit" value="0.0"></p>
         <p>y0 = <input type="text" id="yinit" value ="0.0"></p>
@@ -31,15 +31,21 @@
       <div>
         <button type="button" id="clear">クリア</button>
       </div>
+      <div id="scale_aj">
+        <button type="button" id="s1" number=25>x25</button>
+        <button type="button" id="s2" number=50>x50</button>
+        <button type="button" id="s3" number=100>x100</button>
+      </div>
+      <div>
+        <p>プロットされた座標</p>
+        <p>x = <span id="x_prot"></span></p>
+        <p>y = <span id="y_prot"></span></p>
+      </div>
     </div>
     <div id="graph">
       <div id="area1" class="area">
         <p>計算結果</p>
-        <canvas id="result" class="myCanvas" width="500" height="500"></canvas>
-      </div>
-      <div>
-        <p>プロットされた座標</p>
-        <p>x = <span id="x_prot"></span> y = <span id="y_prot"></span></p>
+        <canvas id="result" class="myCanvas" width="700" height="700"></canvas>
       </div>
     </div>
   </div>
