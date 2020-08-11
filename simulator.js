@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
   );
 
   sim.set_scale(document.querySelectorAll("#scale_aj > button"));
-  sim.draw_axis();
+  sim.draw_axis(25.0);
 });
 
 class Simulator_ui {
@@ -19,11 +19,12 @@ class Simulator_ui {
     this.runge = runge;
     this.canvas = canvas;
     this.scale = 25.0;   //グラフの拡大率,500px基準
+    this.scalememory = 0;
     
     this.clear.addEventListener("click", () => {
       console.log("clear");
       this.clear_canvas();
-      this.draw_axis();
+      this.draw_axis(this.scalememory);
     });
     this.euler.addEventListener("click", () => {
       let euler_result = new Euler(canvas, input, this.scale);
@@ -33,13 +34,13 @@ class Simulator_ui {
       let runge_result = new Runge(canvas, input, this.scale);
       runge_result.animate();
     });
-    this.draw_axis(25.0);
   }
 
   //座標軸と目盛りを描画
   draw_axis(scale) {
     let ctx = this.canvas.getContext("2d");
     this.scale = scale;
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     ctx.strokeStyle = ("rgb(0, 0, 0)");
 
     //x軸の目盛り
@@ -66,13 +67,14 @@ class Simulator_ui {
   clear_canvas() {
     let ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.draw_axis(this.scalememory);
   }
 
   set_scale(btnarray) {
     for (let btn of btnarray) {
       btn.addEventListener("click", () => {
         if (btn.getAttribute("number")) {
-          this.clear_canvas();
+          this.scalememory = (parseInt(btn.getAttribute("number")));
           this.draw_axis(parseInt(btn.getAttribute("number")));
         }
       });
