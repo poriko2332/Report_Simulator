@@ -41,12 +41,6 @@ class Simulator_ui {
     let ctx = this.canvas.getContext("2d");
     this.scale = scale;
     ctx.strokeStyle = ("rgb(0, 0, 0)");
-    // ctx.beginPath();
-    // ctx.moveTo(0, this.canvas.height);
-    // ctx.lineTo(0, 0);
-    // ctx.moveTo(0, this.canvas.height);
-    // ctx.lineTo(this.canvas.width, this.canvas.height);
-    // ctx.stroke();
 
     //x軸の目盛り
     for (let i = 0; i <= this.canvas.width; i += this.scale) {
@@ -101,7 +95,7 @@ class Euler {
 
   next() {
     while (this.xinit <= this.max) {
-      this.yinit += this.prot * this.func_f(this.xinit);   //ここの1.0 * this.xinitを入力した式にしたい。
+      this.yinit += this.prot * this.func_f(this.xinit);   
       this.xinit += this.prot;
       console.log("x = " + this.xinit);
       console.log("y = " + this.yinit);
@@ -124,7 +118,7 @@ class Euler {
       if (this.xinit >= this.max) {
         clearInterval(intervalID);
       }
-      this.yinit += this.prot * this.func_f(this.xinit, this.yinit);   //ここの1.0 * this.xinitを入力した式にしたい。
+      this.yinit += this.prot * this.func_f(this.xinit, this.yinit);   
       this.xinit += this.prot;
       console.log("x = " + this.xinit);
       console.log("y = " + this.yinit);
