@@ -2,7 +2,6 @@ window.addEventListener("load", () => {
   var sim = new Simulator_ui(
     document.querySelectorAll("input"),
     document.querySelector("#clear"),
-    document.querySelector("#overlay"),
     document.querySelector("#euler"),
     document.querySelector("#runge"),
     document.querySelector("#result")
@@ -12,27 +11,27 @@ window.addEventListener("load", () => {
 });
 
 class Simulator_ui {
-  constructor(input, clear, overlay, euler, runge, canvas) {
+  constructor(input, clear, euler, runge, canvas) {
     this.input = input;
     this.clear = clear;
-    this.overlay = overlay;
     this.euler = euler;
     this.runge = runge;
     this.canvas = canvas;
-    this.scale = 50.0;   //グラフの拡大率,500px基準
+    this.scale = 10.0;   //グラフの拡大率,500px基準
     
     this.clear.addEventListener("click", () => {
       console.log("clear");
       this.clear_canvas();
       this.draw_axis();
     });
-    this.overlay.addEventListener("click", () => {
-
-    });
     this.euler.addEventListener("click", () => {
-      var result = new Euler(canvas, input);
-      result.next(this.scale);
+      let euler_result = new Euler(canvas, input, this.scale);
+      euler_result.next();
     });
+    this.runge.addEventListener("click", () => {
+      let runge_result = new Runge(canvas, input, this.scale);
+      runge_result.next();
+    })
   }
 
   //座標軸と目盛りを描画
@@ -73,24 +72,20 @@ class Simulator_ui {
 }
 
 class Euler {
-  constructor(canvas, input) {
-    // this.canvas = canvas;
-    // this.data = input[0].value;
-    // this.formula = (new Function("return " + this.data))();
-    // console.log(this.formula);
+  constructor(canvas, input, scale) {
     this.xinit = parseFloat(input[1].value);
     this.yinit = parseFloat(input[2].value);
     this.prot = parseFloat(input[3].value);
     this.max = 10.0;
+    this.scale = scale;
+    this.x_prot = document.querySelector("#x_prot");
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    
   }
 
-  next(scale) {
-    this.scale = scale;
+  next() {
     while (this.xinit <= this.max) {
-      this.yinit += this.prot * this.xinit * 2;   //ここの1.0 * this.xinitを入力した式にしたい。
+      this.yinit += this.prot * this.func_f(this.xinit);   //ここの1.0 * this.xinitを入力した式にしたい。
       this.xinit += this.prot;
       console.log("x = " + this.xinit);
       console.log("y = " + this.yinit);
@@ -98,17 +93,53 @@ class Euler {
       this.ctx.lineWidth = 2.0;
       this.ctx.strokeStyle = "rgb(220, 40, 40)";
       this.ctx.beginPath();
-      this.ctx.moveTo(this.xinit * scale , this.canvas.height - this.yinit * scale);
-      this.ctx.lineTo(this.xinit * scale + 1, this.canvas.height - this.yinit * scale + 1);
+      this.ctx.moveTo(this.xinit * this.scale , this.canvas.height - this.yinit * this.scale);
+      this.ctx.lineTo(this.xinit * this.scale + 1, this.canvas.height - this.yinit * this.scale + 1);
+      this.ctx.stroke();
+      console.log(this.canvas.height - this.yinit);
+      this.x_prot.innerHTML = String(this.xinit);
+      
+    } 
+  }
+
+  func_f(x) {
+    return 2.0 * x;
+  }
+}
+
+class Runge {
+  constructor(canvas, input, scale) {
+    this.xinit = parseFloat(input[1].value);
+    this.yinit = parseFloat(input[2].value);
+    this.prot = parseFloat(input[3].value);
+    this.max = 10.0;
+    this.scale = scale;
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+  }
+
+  next(scale) {
+    var k1, k2, k3, k4;
+    while (this.xinit <= this.max) {
+      k1 = this.func_f(this.xinit, this.yinit);
+      k2 = this.func_f(this.xinit + this.prot / 2.0, this.yinit + this.prot * k1 * this.prot / 2.0);
+      k3 = this.func_f(this.xinit + this.prot / 2.0, this.yinit + this.prot * k2 * this.prot / 2.0);
+      k4 = this.func_f(this.xinit + this.prot, this.yinit + k3 * this.prot);
+      this.yinit += (this.prot / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4);
+      this.xinit += this.prot;
+
+      this.ctx.lineWidth = 2.0;
+      this.ctx.strokeStyle = "rgb(0, 70, 200)";
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.xinit * this.scale, this.canvas.height - this.yinit * this.scale);
+      this.ctx.lineTo(this.xinit * this.scale + 1, this.canvas.height - this.yinit * this.scale + 1);
       this.ctx.stroke();
       console.log(this.canvas.height - this.yinit);
     }
-    
   }
 
-  
-}
 
-class runge {
-
+  func_f(x, y) {
+    return 2.0 * x;
+  }
 }
